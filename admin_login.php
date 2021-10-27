@@ -11,7 +11,7 @@ include "header.php";?>
 
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body background ="img/login.jpg">
+<body background ="img/login.jpg">  
 <div class="box">
 	<h2>Welcome to PMS Admin Login</h2>
 	<?php 
