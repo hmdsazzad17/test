@@ -9,7 +9,7 @@
                 <div class="theme-icon"></div>
     			<div class="title-box">
                     <h1>Blog Post</h1>
-                    <div class="d-text">Why Laravel is the Best Choice for Your Next Project</div>
+                    <div class="d-text">{{ $blog->title }}</div>
                 </div>
             </div>
 		</div>
@@ -29,29 +29,21 @@
                             <div class="news-block-three">
                                 <div class="inner-box">
                                     <div class="image-box">
-                                        <img src="{{ asset('images/resource/blog-image-14.jpg') }}" alt="" title="">
+                                        @if ($blog->image)
+                                            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" title="">
+                                        @endif
                                     </div>
                                     <div class="lower-box">
-                                        <div class="category">Laravel, Web Development</div>
-                                        <h3>Why Laravel is the Best Choice for Your Next Project</h3>
+                                        <h3>{{ $blog->title }}</h3>
                                         <div class="meta-info">
                                             <ul class="clearfix">
                                                 <li><a href="#">By Admin</a></li>
-                                                <li><a href="#">20 Jan 2024</a></li>
+                                                <li><a href="#">{{ $blog->created_at->format('d M Y') }}</a></li>
                                             </ul>
                                         </div>
 
                                         <div class="text">
-                                            <p>When it comes to building robust and scalable web applications, the choice of framework is crucial. Laravel, a popular open-source PHP framework, has emerged as a top contender for developers and businesses alike. In this post, we'll explore the key reasons why Laravel is the best choice for your next project.</p>
-
-                                            <blockquote>
-                                                Laravel's elegant syntax, rich feature set, and strong community support make it an ideal framework for developing modern, high-performance web applications.
-                                            </blockquote>
-
-                                            <p>One of the main advantages of Laravel is its comprehensive ecosystem. It includes built-in features for authentication, routing, sessions, and caching, which significantly speeds up the development process. Additionally, Laravel's Blade templating engine provides a simple yet powerful way to create dynamic and reusable views.</p>
-
-                                            <p>Security is another area where Laravel excels. It offers robust security features, such as protection against cross-site request forgery (CSRF), cross-site scripting (XSS), and SQL injection. This helps to ensure that your application is safe from common security threats.</p>
-
+                                            {!! $blog->content !!}
                                         </div>
                                     </div>
 

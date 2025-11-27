@@ -15,13 +15,7 @@
                         
                         <div class="content">
                             <div class="inner">
-                                <div class="sub-title">Welcome to Codelab Web Tech</div>
-							<h1>Expert Solutions in <strong>Laravel, React, and More</strong></h1>
-                                <div class="text">We build robust and scalable web applications tailored to your business needs.</div>
-        						<div class="links-box">
-                                    <a href="{{ url('/about') }}" class="theme-btn btn-style-one"><div class="btn-title">Learn More</div></a>
-                                    <a href="{{ url('/contact') }}" class="theme-btn btn-style-two"><div class="btn-title">Get a Quote</div></a>
-                                </div>
+                                {!! $page->content !!}
                             </div>
                         </div>
                         <div class="content-image"><img src="{{ asset('images/main-slider/content-image-1.png') }}" alt="" title=""></div>
