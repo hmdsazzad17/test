@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Earn Online</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        popover: {
+                            DEFAULT: "hsl(var(--popover))",
+                            foreground: "hsl(var(--popover-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 224 71.4% 4.1%;
+            --card: 0 0% 100%;
+            --card-foreground: 224 71.4% 4.1%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 224 71.4% 4.1%;
+            --primary: 262.1 83.3% 57.8%;
+            --primary-foreground: 210 20% 98%;
+            --secondary: 220 14.3% 95.9%;
+            --secondary-foreground: 220.9 39.3% 11%;
+            --muted: 220 14.3% 95.9%;
+            --muted-foreground: 220 8.9% 46.1%;
+            --accent: 220 14.3% 95.9%;
+            --accent-foreground: 220.9 39.3% 11%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 20% 98%;
+            --border: 220 13% 91%;
+            --input: 220 13% 91%;
+            --ring: 262.1 83.3% 57.8%;
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: 224 71.4% 4.1%;
+            --foreground: 210 20% 98%;
+            --card: 224 71.4% 4.1%;
+            --card-foreground: 210 20% 98%;
+            --popover: 224 71.4% 4.1%;
+            --popover-foreground: 210 20% 98%;
+            --primary: 263.4 70% 50.4%;
+            --primary-foreground: 210 20% 98%;
+            --secondary: 215 27.9% 16.9%;
+            --secondary-foreground: 210 20% 98%;
+            --muted: 215 27.9% 16.9%;
+            --muted-foreground: 217.9 10.6% 64.9%;
+            --accent: 215 27.9% 16.9%;
+            --accent-foreground: 210 20% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 20% 98%;
+            --border: 215 27.9% 16.9%;
+            --input: 215 27.9% 16.9%;
+            --ring: 263.4 70% 50.4%;
+        }
+
+        * {
+            border-color: hsl(var(--border));
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sidebar-link.active {
+            background-color: hsla(262, 83%, 58%, 0.1);
+            color: hsl(var(--primary));
+        }
+
+        .sidebar-link.active i {
+            color: hsl(var(--primary));
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-muted/30">
+    <div class="flex">
+        <!-- Sidebar (Desktop) -->
+        <aside class="hidden md:flex w-64 flex-col bg-card border-r fixed inset-y-0 z-50">
+            <div class="h-16 flex items-center px-6 border-b gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-md shadow-fuchsia-500/20">
+                    <i data-lucide="zap" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="font-extrabold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                    Smart Earn
+                </span>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+                <div class="mb-6 px-2">
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Menu</p>
+                </div>
+                <nav id="sidebar-nav">
+                    <button data-view="overview" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        Overview
+                    </button>
+                    <button data-view="ads" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="play-square" class="w-5 h-5"></i>
+                        View Ads
+                    </button>
+                    <button data-view="plans" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="arrow-up-circle" class="w-5 h-5"></i>
+                        Upgrade Plan
+                    </button>
+                    <button data-view="wallet" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="wallet" class="w-5 h-5"></i>
+                        Wallet
+                    </button>
+                </nav>
+            </div>
+
+            <div class="p-4 border-t space-y-1">
+                <button data-view="settings" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    Settings
+                </button>
+                <a href="index_new.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    Log out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Mobile Header -->
+        <div class="md:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b z-50 flex items-center justify-between px-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                    <i data-lucide="zap" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="font-extrabold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                    Smart Earn
+                </span>
+            </div>
+            <button id="mobile-menu-toggle" class="p-2 text-muted-foreground hover:bg-muted rounded-md transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-sidebar" class="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm md:hidden hidden opacity-0 transition-opacity duration-300">
+            <div class="fixed inset-y-0 right-0 w-64 bg-card border-l shadow-xl p-4 flex flex-col pt-20 transition-transform duration-300 translate-x-full" id="mobile-sidebar-content">
+                <button id="close-mobile-sidebar" class="absolute top-6 right-6 p-2 text-muted-foreground hover:bg-muted rounded-md">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <div class="flex-1 space-y-1">
+                    <button data-view="overview" class="sidebar-link active w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                        Overview
+                    </button>
+                    <button data-view="ads" class="sidebar-link w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="play-square" class="w-5 h-5"></i>
+                        View Ads
+                    </button>
+                    <button data-view="plans" class="sidebar-link w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="arrow-up-circle" class="w-5 h-5"></i>
+                        Upgrade Plan
+                    </button>
+                    <button data-view="wallet" class="sidebar-link w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:bg-muted hover:text-foreground">
+                        <i data-lucide="wallet" class="w-5 h-5"></i>
+                        Wallet
+                    </button>
+                    <button data-view="settings" class="sidebar-link w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors border-t mt-4 pt-4">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 pt-16 md:pt-0 min-h-screen flex flex-col">
+            <!-- Top Header -->
+            <header class="hidden md:flex h-16 bg-card border-b items-center justify-between px-8 sticky top-0 z-30">
+                <h1 id="page-title" class="text-lg font-semibold">Overview</h1>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 bg-violet-500/10 px-3 py-1.5 rounded-full border border-violet-500/20">
+                        <i data-lucide="wallet" class="w-4 h-4 text-violet-600"></i>
+                        <span id="top-balance" class="text-sm font-bold text-violet-700">$45.50</span>
+                    </div>
+                    <button class="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full"></span>
+                    </button>
+                    <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
+                        JD
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div id="content-area" class="flex-1 p-4 md:p-8 overflow-x-hidden">
+                <!-- Content will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- View Ad Timer Overlay (Sticky) -->
+    <div id="ad-timer" class="fixed top-20 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-2xl z-[100] hidden">
+        <div class="bg-primary text-primary-foreground p-6 rounded-xl shadow-2xl flex items-center justify-between border border-white/20 backdrop-blur-lg">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-background/20 rounded-full flex items-center justify-center">
+                    <i data-lucide="clock" class="w-6 h-6 animate-pulse"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg leading-tight">Viewing Advertisement...</h3>
+                    <p class="text-primary-foreground/80 text-sm">Please do not close this window.</p>
+                </div>
+            </div>
+            <div class="text-center min-w-[80px]">
+                <div id="timer-count" class="text-3xl font-black tabular-nums">15s</div>
+                <div class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Remaining</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide
+        lucide.createIcons();
+
+        // Data Management
+        const state = {
+            balance: 45.50,
+            currentView: 'overview',
+            ads: [
+                { id: 1, title: "Discover New Tech Gadgets", reward: 0.05, duration: 15, category: "Technology", status: "available" },
+                { id: 2, title: "Learn Crypto Trading Basics", reward: 0.10, duration: 30, category: "Finance", status: "available" },
+                { id: 3, title: "Best Travel Destinations 2026", reward: 0.02, duration: 10, category: "Travel", status: "available" },
+                { id: 4, title: "Master JS in 30 Days", reward: 0.08, duration: 20, category: "Education", status: "available" },
+                { id: 5, title: "Healthy Eating Habits", reward: 0.03, duration: 10, category: "Health", status: "completed" },
+                { id: 6, title: "Top 10 AI Tools", reward: 0.15, duration: 45, category: "Technology", status: "available" },
+            ],
+            user: { name: "John Doe", email: "john@example.com" }
+        };
+
+        // View Switching Logic
+        const views = {
+            overview: () => `
+                <div class="space-y-8 animate-in fade-in duration-500">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold tracking-tight">Welcome back, John! 👋</h2>
+                            <p class="text-muted-foreground">Here's what's happening with your account today.</p>
+                        </div>
+                        <button onclick="switchView('ads')" class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                            <i data-lucide="play-circle" class="mr-2 w-4 h-4"></i> Start Earning
+                        </button>
+                    </div>
+
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        <div class="bg-card border rounded-xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between pb-2">
+                                <h3 class="text-sm font-medium text-muted-foreground">Current Balance</h3>
+                                <i data-lucide="wallet" class="w-4 h-4 text-muted-foreground"></i>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <div class="text-2xl font-bold">$${state.balance.toFixed(2)}</div>
+                                <span class="text-xs font-medium text-emerald-500">+12.5%</span>
+                            </div>
+                        </div>
+                        <div class="bg-card border rounded-xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between pb-2">
+                                <h3 class="text-sm font-medium text-muted-foreground">Total Clicks</h3>
+                                <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-muted-foreground"></i>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <div class="text-2xl font-bold">1,248</div>
+                                <span class="text-xs font-medium text-emerald-500">+5.2%</span>
+                            </div>
+                        </div>
+                        <div class="bg-card border rounded-xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between pb-2">
+                                <h3 class="text-sm font-medium text-muted-foreground">Today's Earnings</h3>
+                                <i data-lucide="trending-up" class="w-4 h-4 text-muted-foreground"></i>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <div class="text-2xl font-bold">$8.90</div>
+                                <span class="text-xs font-medium text-emerald-500">+2.1%</span>
+                            </div>
+                        </div>
+                        <div class="bg-card border rounded-xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between pb-2">
+                                <h3 class="text-sm font-medium text-muted-foreground">Active Plan</h3>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-muted-foreground"></i>
+                            </div>
+                            <div class="flex items-baseline justify-between">
+                                <div class="text-2xl font-bold">Pro Tier</div>
+                                <button onclick="switchView('plans')" class="text-xs font-medium text-primary hover:underline">Upgrade</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 md:grid-cols-7">
+                        <div class="md:col-span-4 bg-card border rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-6 border-b">
+                                <h3 class="font-semibold">Earnings Overview</h3>
+                                <p class="text-sm text-muted-foreground">Your earnings over the last 7 days</p>
+                            </div>
+                            <div class="p-6 h-[300px]">
+                                <canvas id="earningsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="md:col-span-3 bg-card border rounded-xl shadow-sm flex flex-col overflow-hidden">
+                            <div class="p-6 border-b flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-semibold">Recent Activity</h3>
+                                    <p class="text-sm text-muted-foreground">Your latest transactions</p>
+                                </div>
+                                <button onclick="switchView('wallet')" class="inline-flex items-center justify-center rounded-md text-xs font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground px-3 py-1">View All</button>
+                            </div>
+                            <div class="p-6 flex-1 overflow-auto max-h-[350px]">
+                                <div class="space-y-6">
+                                    <div class="recent-activity-item flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-primary/10 text-primary">
+                                                <i data-lucide="play-circle" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium leading-none mb-1">Viewed 'Tech Gadgets' Ad</p>
+                                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                                    <i data-lucide="clock" class="w-3 h-3"></i> 2 mins ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm font-bold text-emerald-500">+$0.05</p>
+                                            <p class="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
+                                                <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i> completed
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="recent-activity-item flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-destructive/10 text-destructive">
+                                                <i data-lucide="wallet" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium leading-none mb-1">Withdrawal to PayPal</p>
+                                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                                    <i data-lucide="clock" class="w-3 h-3"></i> Yesterday
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm font-bold">-$20.00</p>
+                                            <p class="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
+                                                processing
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="recent-activity-item flex items-center justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-emerald-500/10 text-emerald-500">
+                                                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium leading-none mb-1">Referral Bonus (John D.)</p>
+                                                <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                                    <i data-lucide="clock" class="w-3 h-3"></i> 2 days ago
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm font-bold text-emerald-500">+$1.50</p>
+                                            <p class="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
+                                                <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i> completed
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            ads: () => {
+                const availableCount = state.ads.filter(a => a.status === 'available').length;
+                const potentialReward = state.ads.filter(a => a.status === 'available').reduce((sum, a) => sum + a.reward, 0);
+                
+                return `
+                <div class="space-y-8 animate-in fade-in duration-500">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold tracking-tight">Available Ads</h2>
+                            <p class="text-muted-foreground">Watch ads to earn money. New ads are added daily.</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-primary/10 text-primary px-4 py-2 rounded-lg border border-primary/20">
+                            <div class="text-sm font-medium">
+                                <span class="opacity-80">Available:</span> <span class="font-bold">${availableCount}</span>
+                            </div>
+                            <div class="w-px h-4 bg-primary/30"></div>
+                            <div class="text-sm font-medium">
+                                <span class="opacity-80">Potential:</span> <span class="font-bold">$${potentialReward.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        ${state.ads.map(ad => `
+                            <div class="bg-card border rounded-xl p-6 shadow-sm flex flex-col relative overflow-hidden ${ad.status === 'completed' ? 'opacity-60' : ''}">
+                                ${ad.status === 'completed' ? `
+                                    <div class="absolute inset-0 bg-background/40 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                                        <div class="bg-card border shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-emerald-500 font-bold">
+                                            <i data-lucide="check-circle-2" class="w-5 h-5"></i> Completed
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                                        ${ad.category}
+                                    </span>
+                                    <span class="text-lg font-black text-emerald-500">$${ad.reward.toFixed(2)}</span>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2 line-clamp-2">${ad.title}</h3>
+                                <div class="flex items-center gap-4 text-xs text-muted-foreground mb-6 mt-auto pt-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="clock" class="w-4 h-4"></i> ${ad.duration}s
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="alert-circle" class="w-4 h-4"></i> Focus Required
+                                    </div>
+                                </div>
+                                <button ${ad.status === 'completed' ? 'disabled' : `onclick="startAd(${ad.id}, ${ad.duration})"`} class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 disabled:opacity-50 disabled:pointer-events-none">
+                                    ${ad.status === 'completed' ? 'Already Viewed' : '<i data-lucide="play-circle" class="mr-2 w-4 h-4"></i> View Ad'}
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `},
+            plans: () => `
+                <div class="space-y-8 max-w-6xl mx-auto animate-in fade-in duration-500">
+                    <div class="text-center max-w-2xl mx-auto mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">Upgrade Your Earnings</h2>
+                        <p class="text-muted-foreground text-lg">
+                            Unlock higher paying ads, more daily clicks, and faster withdrawals by upgrading your account tier.
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-card border rounded-3xl p-8 shadow-sm flex flex-col opacity-60">
+                            <div class="mb-8">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                                    <i data-lucide="star" class="w-6 h-6 text-primary"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Starter</h3>
+                                <p class="text-muted-foreground text-sm h-10">Perfect to try out the platform</p>
+                                <div class="mt-4 flex items-baseline text-4xl font-extrabold">Free</div>
+                            </div>
+                            <ul class="space-y-4 mb-8 flex-1 text-sm">
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 10 Ads per day</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> $0.01 base per click</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> Standard support</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 5% Referral bonus</li>
+                            </ul>
+                            <button disabled class="w-full h-12 text-base rounded-md border border-input bg-background px-4 py-2 font-semibold">Starter (Current)</button>
+                        </div>
+
+                        <div class="relative bg-card border border-primary rounded-3xl p-8 shadow-md ring-1 ring-primary flex flex-col bg-muted/30">
+                            <div class="absolute -top-4 left-0 right-0 flex justify-center">
+                                <span class="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Current Plan</span>
+                            </div>
+                            <div class="mb-8">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                                    <i data-lucide="zap" class="w-6 h-6 text-primary"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Pro</h3>
+                                <p class="text-muted-foreground text-sm h-10">For serious earners</p>
+                                <div class="mt-4 flex items-baseline text-4xl font-extrabold">$9.99<span class="text-lg font-medium text-muted-foreground ml-1">/mo</span></div>
+                            </div>
+                            <ul class="space-y-4 mb-8 flex-1 text-sm">
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 50 Ads per day limit</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> $0.05 base per click</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> Priority support</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 15% Referral bonus</li>
+                            </ul>
+                            <button disabled class="w-full h-12 text-base rounded-md bg-transparent border border-primary/20 text-primary font-bold">Active</button>
+                        </div>
+
+                        <div class="bg-card border rounded-3xl p-8 shadow-sm flex flex-col">
+                            <div class="mb-8">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                                    <i data-lucide="shield-check" class="w-6 h-6 text-primary"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Elite</h3>
+                                <p class="text-muted-foreground text-sm h-10">Maximum earning potential</p>
+                                <div class="mt-4 flex items-baseline text-4xl font-extrabold">$24.99<span class="text-lg font-medium text-muted-foreground ml-1">/mo</span></div>
+                            </div>
+                            <ul class="space-y-4 mb-8 flex-1 text-sm">
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> Unlimited Ads</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> $0.10 base per click</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 24/7 VIP support</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> 30% Referral bonus</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-primary shrink-0"></i> Dedicated manager</li>
+                            </ul>
+                            <button class="w-full h-12 text-base rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-bold transition-all">Upgrade Now</button>
+                        </div>
+                    </div>
+                </div>
+            `,
+            wallet: () => `
+                <div class="space-y-8 max-w-5xl mx-auto animate-in fade-in duration-500">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold tracking-tight">Wallet & Withdrawals</h2>
+                            <p class="text-muted-foreground">Manage your earnings and request payouts.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2 bg-primary text-primary-foreground rounded-3xl p-8 shadow-lg relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                            <div class="relative z-10 flex flex-col h-full justify-between">
+                                <div class="flex items-center gap-3 mb-8">
+                                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                        <i data-lucide="wallet" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="font-semibold text-lg opacity-90">Available Balance</span>
+                                </div>
+                                <div>
+                                    <div class="text-5xl md:text-7xl font-black tracking-tighter mb-2">$${state.balance.toFixed(2)}</div>
+                                    <p class="text-primary-foreground/80 font-medium">Minimum withdrawal: $10.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-card border rounded-3xl p-6 shadow-sm flex flex-col justify-center space-y-6">
+                            <h3 class="font-bold text-lg">Quick Withdraw</h3>
+                            <div class="space-y-4">
+                                <div class="p-4 border border-primary rounded-xl flex items-center justify-between cursor-pointer bg-muted/50">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-[#00457C] rounded flex items-center justify-center text-white font-black text-[10px]">PP</div>
+                                        <span class="font-bold text-sm">PayPal</span>
+                                    </div>
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-primary"></i>
+                                </div>
+                                <div class="p-4 border rounded-xl flex items-center justify-between cursor-pointer hover:border-primary transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-zinc-900 rounded flex items-center justify-center text-white font-black text-[10px]">BTC</div>
+                                        <span class="font-bold text-sm">Bitcoin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="w-full h-12 bg-primary text-primary-foreground rounded-lg font-bold shadow-lg hover:shadow-primary/20 transition-all">Withdraw Funds</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-card border rounded-2xl shadow-sm overflow-hidden">
+                        <div class="p-6 border-b flex items-center justify-between bg-muted/30">
+                            <h3 class="font-bold text-lg">Transaction History</h3>
+                            <button class="inline-flex items-center justify-center rounded-md text-xs font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3">Download CSV</button>
+                        </div>
+                        <div class="divide-y">
+                            <div class="p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-destructive/10 text-destructive flex items-center justify-center">
+                                        <i data-lucide="arrow-up-right" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-base mb-1">PayPal Withdrawal</p>
+                                        <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                            <i data-lucide="clock" class="w-4 h-4"></i> 2026-03-22
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-black">$20.00</p>
+                                    <div class="flex items-center justify-end gap-1 mt-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                        <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i> completed
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                                        <i data-lucide="arrow-down-right" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-base mb-1">Ad Views Earnings</p>
+                                        <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                                            <i data-lucide="clock" class="w-4 h-4"></i> 2026-03-21
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-black text-emerald-500">+$8.90</p>
+                                    <div class="flex items-center justify-end gap-1 mt-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                        <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-500"></i> completed
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            settings: () => `
+                <div class="space-y-8 max-w-4xl mx-auto animate-in fade-in duration-500">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight">Account Settings</h2>
+                        <p class="text-muted-foreground">Manage your account preferences and personal information.</p>
+                    </div>
+
+                    <div class="grid gap-6">
+                        <div class="bg-card border rounded-2xl p-6 shadow-sm space-y-6">
+                            <h3 class="font-bold text-lg border-b pb-4">Profile Information</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Full Name</label>
+                                    <input type="text" value="John Doe" class="w-full px-3 py-2 bg-background border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium">Email Address</label>
+                                    <input type="email" value="john@example.com" class="w-full px-3 py-2 bg-background border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                </div>
+                            </div>
+                            <div class="flex justify-end pt-4">
+                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 font-bold shadow-lg">Save Changes</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-card border rounded-2xl p-6 shadow-sm space-y-6">
+                            <h3 class="font-bold text-lg border-b pb-4">Payment Methods</h3>
+                            <div class="space-y-4">
+                                <div class="p-4 border rounded-xl flex items-center justify-between bg-muted/30">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-[#00457C] rounded-lg flex items-center justify-center text-white font-bold text-xs">PP</div>
+                                        <div>
+                                            <p class="font-bold text-sm">PayPal</p>
+                                            <p class="text-xs text-muted-foreground">john.doe@example.com</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-xs text-emerald-500 font-bold">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4"></i> Verified
+                                    </div>
+                                </div>
+                                <button class="w-full py-4 border-2 border-dashed border-muted-foreground/20 rounded-xl text-sm font-bold text-muted-foreground hover:bg-muted/50 transition-colors">
+                                    + Add Payment Method
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-card border border-destructive/20 rounded-2xl p-6 shadow-sm space-y-6">
+                            <h3 class="font-bold text-lg border-b pb-4 text-destructive">Danger Zone</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed">
+                                Once you delete your account, there is no going back. All your earnings will be permanently lost.
+                            </p>
+                            <button class="inline-flex items-center justify-center rounded-md text-sm font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90 h-11 px-6">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        function switchView(viewName) {
+            if (!views[viewName]) return;
+            
+            // Update Active Link (Desktop)
+            document.querySelectorAll('#sidebar-nav .sidebar-link').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-view') === viewName);
+            });
+            // Update Active Link (Mobile)
+            document.querySelectorAll('#mobile-sidebar .sidebar-link').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-view') === viewName);
+            });
+
+            // Update UI
+            state.currentView = viewName;
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = views[viewName]();
+            
+            // Update Header Title
+            const titles = { overview: 'Dashboard Overview', ads: 'PTC Advertisements', plans: 'Earning Plans', wallet: 'Wallet & Payouts', settings: 'Account Settings' };
+            document.getElementById('page-title').textContent = titles[viewName] || 'Dashboard';
+            
+            // Re-init icons
+            lucide.createIcons();
+            
+            // If overview, init chart
+            if (viewName === 'overview') initChart();
+            
+            // Close mobile menu if open
+            closeMobileMenu();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('earningsChart');
+            if (!ctx) return;
+            
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(124, 58, 237, 0.3)');
+            gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Earnings',
+                        data: [4.5, 6.2, 5.8, 8.9, 7.4, 10.5, 9.2],
+                        borderColor: '#7c3aed',
+                        borderWidth: 3,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#7c3aed',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
+                            ticks: { callback: value => '$' + value, font: { family: 'Inter', size: 10 } }
+                        },
+                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        let adTimer = null;
+        function startAd(id, duration) {
+            const timerOverlay = document.getElementById('ad-timer');
+            const timerCount = document.getElementById('timer-count');
+            
+            timerOverlay.classList.remove('hidden');
+            timerOverlay.classList.add('flex');
+            
+            let timeLeft = duration;
+            timerCount.textContent = timeLeft + 's';
+            
+            adTimer = setInterval(() => {
+                timeLeft--;
+                timerCount.textContent = timeLeft + 's';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(adTimer);
+                    completeAd(id);
+                }
+            }, 1000);
+        }
+
+        function completeAd(id) {
+            const ad = state.ads.find(a => a.id === id);
+            if (ad) {
+                ad.status = 'completed';
+                state.balance += ad.reward;
+                
+                // Update Balance UI
+                document.getElementById('top-balance').textContent = '$' + state.balance.toFixed(2);
+                
+                // Hide Timer
+                const timerOverlay = document.getElementById('ad-timer');
+                timerOverlay.classList.add('hidden');
+                
+                // Refresh View
+                switchView('ads');
+                
+                // Show success notification (simplified)
+                alert(`Earnings Credited! You earned $${ad.reward.toFixed(2)}`);
+            }
+        }
+
+        // Mobile Menu Toggles
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileSidebarContent = document.getElementById('mobile-sidebar-content');
+        const closeMobile = document.getElementById('close-mobile-sidebar');
+
+        function openMobileMenu() {
+            mobileSidebar.classList.remove('hidden');
+            setTimeout(() => {
+                mobileSidebar.classList.remove('opacity-0');
+                mobileSidebarContent.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeMobileMenu() {
+            mobileSidebarContent.classList.add('translate-x-full');
+            mobileSidebar.classList.add('opacity-0');
+            setTimeout(() => {
+                mobileSidebar.classList.add('hidden');
+            }, 300);
+        }
+
+        mobileToggle.addEventListener('click', openMobileMenu);
+        closeMobile.addEventListener('click', closeMobileMenu);
+        mobileSidebar.addEventListener('click', (e) => {
+            if (e.target === mobileSidebar) closeMobileMenu();
+        });
+
+        // Initialize First View
+        window.addEventListener('load', () => {
+            switchView('overview');
+            
+            // Add click events to sidebar buttons
+            document.querySelectorAll('.sidebar-link[data-view]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switchView(btn.getAttribute('data-view'));
+                });
+            });
+        });
+    </script>
+</body>
+</html>

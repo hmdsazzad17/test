@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Earn Online - PTC Advertising Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        popover: {
+                            DEFAULT: "hsl(var(--popover))",
+                            foreground: "hsl(var(--popover-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                    keyframes: {
+                        'gradient-xy': {
+                            '0%, 100%': {
+                                'background-size': '400% 400%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    },
+                    animation: {
+                        'gradient-xy': 'gradient-xy 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        @layer base {
+            :root {
+                --background: 0 0% 100%;
+                --foreground: 222.2 84% 4.9%;
+                --card: 0 0% 100%;
+                --card-foreground: 222.2 84% 4.9%;
+                --popover: 0 0% 100%;
+                --popover-foreground: 222.2 84% 4.9%;
+                --primary: 262.1 83.3% 57.8%;
+                --primary-foreground: 210 40% 98%;
+                --secondary: 210 40% 96.1%;
+                --secondary-foreground: 222.2 47.4% 11.2%;
+                --muted: 210 40% 96.1%;
+                --muted-foreground: 215.4 16.3% 46.9%;
+                --accent: 210 40% 96.1%;
+                --accent-foreground: 222.2 47.4% 11.2%;
+                --destructive: 0 84.2% 60.2%;
+                --destructive-foreground: 210 40% 98%;
+                --border: 214.3 31.8% 91.4%;
+                --input: 214.3 31.8% 91.4%;
+                --ring: 262.1 83.3% 57.8%;
+                --radius: 0.5rem;
+            }
+
+            .dark {
+                --background: 222.2 84% 4.9%;
+                --foreground: 210 40% 98%;
+                --card: 222.2 84% 4.9%;
+                --card-foreground: 210 40% 98%;
+                --popover: 222.2 84% 4.9%;
+                --popover-foreground: 210 40% 98%;
+                --primary: 263.4 70% 50.4%;
+                --primary-foreground: 210 40% 98%;
+                --secondary: 217.2 32.6% 17.5%;
+                --secondary-foreground: 210 40% 98%;
+                --muted: 217.2 32.6% 17.5%;
+                --muted-foreground: 215 20.2% 65.1%;
+                --accent: 217.2 32.6% 17.5%;
+                --accent-foreground: 210 40% 98%;
+                --destructive: 0 62.8% 30.6%;
+                --destructive-foreground: 210 40% 98%;
+                --border: 217.2 32.6% 17.5%;
+                --input: 217.2 32.6% 17.5%;
+                --ring: 263.4 70% 50.4%;
+            }
+        }
+    </style>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .dark .glass-nav {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        @keyframes morph {
+            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 50%; }
+        }
+        .animate-morph {
+            animation: morph 20s ease-in-out infinite;
+        }
+
+        /* Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/30 origin-top">
+    <!-- Navigation -->
+    <nav class="border-b border-white/20 glass-nav sticky top-0 z-50 shadow-[0_8px_32px_rgba(31,38,135,0.1)]">
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-fuchsia-500/20 to-orange-500/20 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent pointer-events-none"></div>
+        <div class="container mx-auto px-4 h-20 flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 flex items-center justify-center shadow-[0_0_30px_rgba(217,70,239,0.6)] border-2 border-white/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/50 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+                    <i data-lucide="zap" class="text-white w-7 h-7 drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]"></i>
+                </div>
+                <span class="font-black text-3xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 drop-shadow-[0_2px_15px_rgba(217,70,239,0.5)]">Smart Earn</span>
+            </div>
+            <div class="hidden lg:flex items-center gap-8 text-sm font-semibold text-muted-foreground">
+                <a href="#services" class="hover:text-primary transition-colors">Services</a>
+                <a href="#about" class="hover:text-primary transition-colors">About</a>
+                <a href="#how-it-works" class="hover:text-primary transition-colors">How it Works</a>
+                <a href="#pricing" class="hover:text-primary transition-colors">Pricing</a>
+                <a href="#reviews" class="hover:text-primary transition-colors">Reviews</a>
+                <a href="#faq" class="hover:text-primary transition-colors">FAQ</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="/dashboard" class="hidden sm:flex font-semibold text-sm px-4 py-2 hover:bg-muted rounded-md transition-colors">Log in</a>
+                <a href="/dashboard" class="font-semibold bg-primary text-primary-foreground shadow-lg shadow-primary/20 px-6 py-2 rounded-md hover:bg-primary/90 transition-colors">Get Started</a>
+                <button id="mobile-menu-btn" class="lg:hidden p-2 text-muted-foreground hover:bg-muted rounded-md transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-background/80 backdrop-blur-xl z-[60] lg:hidden hidden flex-col items-center justify-center gap-8 opacity-0 transition-all duration-300">
+            <button id="close-menu-btn" class="absolute top-6 right-6 p-2 text-muted-foreground hover:bg-muted rounded-md transition-colors">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <a href="#services" class="text-2xl font-bold hover:text-primary transition-colors">Services</a>
+            <a href="#about" class="text-2xl font-bold hover:text-primary transition-colors">About</a>
+            <a href="#how-it-works" class="text-2xl font-bold hover:text-primary transition-colors">How it Works</a>
+            <a href="#pricing" class="text-2xl font-bold hover:text-primary transition-colors">Pricing</a>
+            <a href="#reviews" class="text-2xl font-bold hover:text-primary transition-colors">Reviews</a>
+            <a href="#faq" class="text-2xl font-bold hover:text-primary transition-colors">FAQ</a>
+            <div class="flex flex-col gap-4 w-full px-12 pt-8">
+                <a href="/dashboard" class="w-full h-14 flex items-center justify-center bg-muted font-bold rounded-xl">Log in</a>
+                <a href="/dashboard" class="w-full h-14 flex items-center justify-center bg-primary text-primary-foreground font-bold rounded-xl">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1">
+        <!-- 1. Hero Section -->
+        <section class="relative pt-24 pb-32 md:pt-32 md:pb-40 overflow-hidden bg-[#fbfbfb] dark:bg-slate-950">
+            <!-- Animated Glossy Colorful Background -->
+            <div class="absolute inset-0 -z-20 overflow-hidden">
+                <!-- Animated Gradient Meshes -->
+                <div class="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-violet-500/40 to-fuchsia-500/40 blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-morph"></div>
+                <div class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[80%] bg-gradient-to-tl from-orange-500/40 to-fuchsia-500/40 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-morph" style="animation-delay: -5s;"></div>
+                <!-- Glassy Overlay -->
+                <div class="absolute inset-0 bg-white/30 dark:bg-black/30 backdrop-blur-[60px]"></div>
+            </div>
+            
+            <!-- Vector Wave Graphic -->
+            <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] -z-10 text-background">
+                <svg class="relative block w-full aspect-[1200/120]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118,130.83,123,192.6,108.6,237.4,98.2,280.4,76.5,321.39,56.44Z" fill="currentColor"></path>
+                </svg>
+            </div>
+
+            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 mix-blend-overlay -z-10"></div>
+            
+            <!-- Animated Massive Glowing Orbs -->
+            <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-violet-500/40 blur-[120px] -z-10 mix-blend-multiply dark:mix-blend-screen animate-float"></div>
+            <div class="absolute top-[20%] right-[-10%] w-[40%] h-[50%] rounded-full bg-fuchsia-500/40 blur-[120px] -z-10 mix-blend-multiply dark:mix-blend-screen animate-float" style="animation-delay: -2s;"></div>
+            <div class="absolute bottom-[-10%] left-[20%] w-[50%] h-[40%] rounded-full bg-orange-500/40 blur-[120px] -z-10 mix-blend-multiply dark:mix-blend-screen animate-float" style="animation-delay: -4s;"></div>
+            
+            <!-- Grid Overlay -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_80%,transparent_100%)] -z-10"></div>
+            
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <div class="max-w-4xl mx-auto space-y-8 opacity-0 translate-y-4 transition-all duration-700 ease-out" id="hero-content">
+                    <div class="inline-flex items-center rounded-full border border-fuchsia-500/30 bg-white/50 dark:bg-black/50 px-4 py-1.5 text-sm font-semibold text-fuchsia-600 dark:text-fuchsia-400 backdrop-blur-md shadow-[0_0_20px_rgba(217,70,239,0.15)]">
+                        <i data-lucide="star" class="w-4 h-4 mr-2 fill-fuchsia-500 text-fuchsia-500"></i> Rated #1 Earning Platform in 2026
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] drop-shadow-xl text-slate-800 dark:text-white">
+                        Turn Your Attention Into <br class="hidden md:block">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500 drop-shadow-2xl">
+                          Real Revenue
+                        </span>
+                    </h1>
+                    <p class="text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
+                        The world's most advanced Pay-To-Click platform. Whether you want to earn money in your spare time or drive high-quality traffic to your business, Smart Earn Online is your ultimate solution.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <a href="/dashboard" class="w-full sm:w-auto text-lg h-14 px-8 flex items-center justify-center gap-2 rounded-xl shadow-[0_0_30px_rgba(217,70,239,0.4)] bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 hover:from-violet-500 hover:via-fuchsia-500 hover:to-orange-400 text-white font-bold transition-all hover:scale-105">
+                            Start Earning Now <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        <button onclick="document.getElementById('services').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto text-lg h-14 px-8 flex items-center justify-center rounded-xl bg-white/40 dark:bg-black/40 backdrop-blur-md border border-fuchsia-500/30 hover:bg-white/60 dark:hover:bg-black/60 hover:text-fuchsia-600 dark:hover:text-fuchsia-400 font-bold transition-all hover:scale-105 shadow-lg">
+                            I'm an Advertiser
+                        </button>
+                    </div>
+                    
+                    <div class="pt-10 flex flex-wrap items-center justify-center gap-8 text-sm font-medium text-muted-foreground">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Instant Payouts
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> High Conversion Traffic
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Bank-Grade Security
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Stats & Trust Section -->
+        <section class="border-y border-white/10 bg-gradient-to-r from-violet-500/5 via-fuchsia-500/5 to-orange-500/5 py-16 relative overflow-hidden backdrop-blur-sm">
+            <div class="absolute inset-0 bg-white/40 dark:bg-black/40 -z-10"></div>
+            <div class="container mx-auto px-4">
+                <p class="text-center text-sm font-bold tracking-widest text-muted-foreground uppercase mb-10">Trusted by over 100,000+ users and brands worldwide</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="space-y-3 reveal shrink-0">
+                        <div class="mx-auto w-16 h-16 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 shadow-[0_0_20px_rgba(217,70,239,0.3)] rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+                            <i data-lucide="users" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-4xl font-black tracking-tight">100K+</h3>
+                        <p class="text-sm text-muted-foreground font-semibold uppercase tracking-wider">Active Earners</p>
+                    </div>
+                    <div class="space-y-3 reveal shrink-0" style="transition-delay: 100ms;">
+                        <div class="mx-auto w-16 h-16 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 shadow-[0_0_20px_rgba(217,70,239,0.3)] rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+                            <i data-lucide="target" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-4xl font-black tracking-tight">25,000+</h3>
+                        <p class="text-sm text-muted-foreground font-semibold uppercase tracking-wider">Ad Campaigns</p>
+                    </div>
+                    <div class="space-y-3 reveal shrink-0" style="transition-delay: 200ms;">
+                        <div class="mx-auto w-16 h-16 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 shadow-[0_0_20px_rgba(217,70,239,0.3)] rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+                            <i data-lucide="wallet" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-4xl font-black tracking-tight">$2.5M+</h3>
+                        <p class="text-sm text-muted-foreground font-semibold uppercase tracking-wider">Total Paid Out</p>
+                    </div>
+                    <div class="space-y-3 reveal shrink-0" style="transition-delay: 300ms;">
+                        <div class="mx-auto w-16 h-16 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 shadow-[0_0_20px_rgba(217,70,239,0.3)] rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+                            <i data-lucide="globe" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-4xl font-black tracking-tight">150+</h3>
+                        <p class="text-sm text-muted-foreground font-semibold uppercase tracking-wider">Countries Supported</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Services Section -->
+        <section id="services" class="py-24 md:py-32 relative overflow-hidden">
+            <div class="absolute top-[20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-orange-500/20 blur-[120px] -z-10"></div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-violet-500/20 blur-[120px] -z-10"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">A Dual-Sided Ecosystem</h2>
+                    <p class="text-xl text-muted-foreground">
+                        Smart Earn Online provides immense value whether you are looking to generate an extra income stream or acquire high-quality users for your business.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 lg:gap-20">
+                    <!-- For Earners -->
+                    <div class="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden reveal hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(139,92,246,0.4)] border border-white/20">
+                            <i data-lucide="wallet" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4">For Earners</h3>
+                        <p class="text-muted-foreground text-lg mb-8">
+                            Monetize your free time. View advertisements, complete simple micro-tasks, and participate in surveys to earn real cash.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-500 shrink-0"></i>
+                                <span class="font-medium">High-paying daily advertisements</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-500 shrink-0"></i>
+                                <span class="font-medium">Lucrative referral program (up to 30%)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-500 shrink-0"></i>
+                                <span class="font-medium">Instant withdrawals to PayPal & Crypto</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-500 shrink-0"></i>
+                                <span class="font-medium">Daily login bonuses and achievements</span>
+                            </li>
+                        </ul>
+                        <a href="/dashboard" class="w-full h-14 flex items-center justify-center text-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl shadow-[0_0_20px_rgba(217,70,239,0.3)] font-bold transition-all">
+                            Start Earning
+                        </a>
+                    </div>
+
+                    <!-- For Advertisers -->
+                    <div class="bg-zinc-950/80 backdrop-blur-xl text-zinc-50 border border-zinc-800/50 rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden reveal hover:shadow-2xl transition-all duration-500" style="transition-delay: 200ms;">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(59,130,246,0.4)] border border-white/10">
+                            <i data-lucide="target" class="w-8 h-8 text-white drop-shadow-md"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 text-white">For Advertisers</h3>
+                        <p class="text-zinc-400 text-lg mb-8">
+                            Drive real, engaged human traffic to your website, product, or affiliate link with our advanced targeting system.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                                <span class="font-medium text-zinc-300">100% Real human traffic (Anti-bot protection)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                                <span class="font-medium text-zinc-300">Advanced demographic & geo-targeting</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                                <span class="font-medium text-zinc-300">Detailed real-time analytics dashboard</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                                <span class="font-medium text-zinc-300">Cost-effective CPC starting at $0.005</span>
+                            </li>
+                        </ul>
+                        <a href="/dashboard" class="w-full h-14 flex items-center justify-center text-lg bg-white text-black hover:bg-zinc-200 rounded-xl font-bold transition-all">
+                            Create Campaign
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. About Us -->
+        <section id="about" class="py-24 bg-muted/30 border-y">
+            <div class="container mx-auto px-4">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="relative reveal">
+                        <div class="aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden relative shadow-2xl">
+                            <img src="https://picsum.photos/seed/office/800/600" alt="Our Team" class="object-cover w-full h-full" referrerPolicy="no-referrer">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-8 left-8 right-8 text-white">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i data-lucide="award" class="w-6 h-6 text-primary"></i>
+                                    <span class="font-bold tracking-wider uppercase">Award Winning Platform</span>
+                                </div>
+                                <p class="text-white/80 font-medium">Recognized for excellence in digital advertising transparency.</p>
+                            </div>
+                        </div>
+                        <!-- Floating badge -->
+                        <div class="absolute -bottom-8 -right-8 bg-background p-6 rounded-2xl shadow-xl border hidden md:block">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i data-lucide="globe" class="w-6 h-6 text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-black">Global</p>
+                                    <p class="text-sm text-muted-foreground font-medium">Presence in 150+ countries</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8 reveal" style="transition-delay: 200ms;">
+                        <div>
+                            <h2 class="text-4xl font-bold mb-4 tracking-tight">About Smart Earn Online</h2>
+                            <p class="text-xl text-muted-foreground leading-relaxed">
+                                Founded in 2024, Smart Earn Online was built with a singular mission: to democratize digital advertising by creating a transparent, rewarding ecosystem for both consumers and brands.
+                            </p>
+                        </div>
+                        <div class="space-y-6">
+                            <p class="text-muted-foreground leading-relaxed">
+                                We noticed a fundamental flaw in traditional advertising—users were bombarded with ads without receiving any of the value they generated. Meanwhile, advertisers struggled with bot traffic and low engagement.
+                            </p>
+                            <p class="text-muted-foreground leading-relaxed">
+                                Smart Earn Online solves this by directly incentivizing users for their attention, ensuring advertisers get genuine, highly-engaged human traffic. It's a win-win model that has already transformed the lives of thousands of our members.
+                            </p>
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-6 pt-4">
+                            <div class="bg-card border p-4 rounded-xl">
+                                <h4 class="font-bold text-lg mb-1">Our Mission</h4>
+                                <p class="text-sm text-muted-foreground">To create the most rewarding and transparent micro-task economy.</p>
+                            </div>
+                            <div class="bg-card border p-4 rounded-xl">
+                                <h4 class="font-bold text-lg mb-1">Our Vision</h4>
+                                <p class="text-sm text-muted-foreground">To become the global standard for incentivized digital advertising.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. How It Works -->
+        <section id="how-it-works" class="py-24 md:py-32 relative overflow-hidden">
+            <!-- Colorful Vector Background Elements -->
+            <div class="absolute top-[20%] left-[-10%] w-[30%] h-[40%] rounded-full bg-orange-500/10 blur-[100px] -z-10"></div>
+            <div class="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] rounded-full bg-violet-500/10 blur-[120px] -z-10"></div>
+            
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">How Smart Earn Online Works</h2>
+                    <p class="text-xl text-muted-foreground">
+                        Three simple steps to start generating income from your phone or computer. No special skills required.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 relative">
+                    <div class="hidden md:block absolute top-16 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-violet-500/10 via-fuchsia-500/50 to-orange-500/10 -z-10"></div>
+                    
+                    <div class="relative bg-card border rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-500 reveal">
+                        <div class="w-20 h-20 bg-background border-4 border-card shadow-xl rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-8 text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 relative z-10">01</div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="users" class="w-6 h-6 text-fuchsia-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Create Your Account</h3>
+                        <p class="text-muted-foreground leading-relaxed text-lg">Sign up for free in less than 2 minutes. Verify your email and you're ready to go. No credit card required.</p>
+                    </div>
+
+                    <div class="relative bg-card border rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-500 reveal" style="transition-delay: 200ms;">
+                        <div class="w-20 h-20 bg-background border-4 border-card shadow-xl rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-8 text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 relative z-10">02</div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-fuchsia-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">View Advertisements</h3>
+                        <p class="text-muted-foreground leading-relaxed text-lg">Browse our daily updated list of advertisements. Click, view for the required duration, and complete the captcha.</p>
+                    </div>
+
+                    <div class="relative bg-card border rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-500 reveal" style="transition-delay: 400ms;">
+                        <div class="w-20 h-20 bg-background border-4 border-card shadow-xl rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-8 text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-fuchsia-500 relative z-10">03</div>
+                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="wallet" class="w-6 h-6 text-fuchsia-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Withdraw Earnings</h3>
+                        <p class="text-muted-foreground leading-relaxed text-lg">Once you reach the minimum threshold, withdraw your earnings instantly to PayPal, Crypto, or Bank Transfer.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 6. Pricing -->
+        <section id="pricing" class="py-24 md:py-32 bg-zinc-950 text-zinc-50 relative overflow-hidden">
+            <!-- Colorful Vector Background Elements -->
+            <div class="absolute top-0 left-0 w-full h-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] -z-10"></div>
+            <div class="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/20 blur-[120px] -z-10"></div>
+            <div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-violet-600/20 blur-[120px] -z-10"></div>
+            
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-white">Boost Your Earning Potential</h2>
+                    <p class="text-xl text-zinc-400">
+                        Upgrade your account to unlock higher paying ads, more daily clicks, and exclusive premium features.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Starter -->
+                    <div class="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-xl flex flex-col reveal transition-all duration-500">
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-bold mb-2 text-white">Starter</h3>
+                            <p class="text-zinc-400 text-sm h-10">Perfect to try out the platform</p>
+                            <div class="mt-6 flex items-baseline text-5xl font-black text-white">
+                                Free
+                            </div>
+                        </div>
+                        <ul class="space-y-5 mb-10 flex-1">
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">10 Ads per day</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">$0.01 base per click</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Standard support</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">5% Referral bonus</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Weekly withdrawals</span>
+                            </li>
+                        </ul>
+                        <a href="/dashboard/plans" class="w-full h-14 flex items-center justify-center text-lg bg-transparent text-white border border-zinc-700 hover:bg-zinc-800 rounded-xl font-bold transition-all">
+                            Get Started
+                        </a>
+                    </div>
+
+                    <!-- Pro -->
+                    <div class="relative bg-zinc-900 border border-primary rounded-3xl p-8 shadow-2xl shadow-primary/20 ring-1 ring-primary transform md:-translate-y-4 flex flex-col reveal transition-all duration-500" style="transition-delay: 200ms;">
+                        <div class="absolute -top-4 left-0 right-0 flex justify-center">
+                            <span class="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                                Most Popular
+                            </span>
+                        </div>
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-bold mb-2 text-white">Pro</h3>
+                            <p class="text-zinc-400 text-sm h-10">For serious earners</p>
+                            <div class="mt-6 flex items-baseline text-5xl font-black text-white">
+                                $9.99<span class="text-xl font-medium text-zinc-500 ml-2">/mo</span>
+                            </div>
+                        </div>
+                        <ul class="space-y-5 mb-10 flex-1">
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">50 Ads per day</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">$0.05 base per click</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Priority support</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">15% Referral bonus</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Instant withdrawals</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Premium ad access</span>
+                            </li>
+                        </ul>
+                        <a href="/dashboard/plans" class="w-full h-14 flex items-center justify-center text-lg bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold transition-all">
+                            Upgrade Now
+                        </a>
+                    </div>
+
+                    <!-- Elite -->
+                    <div class="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-xl flex flex-col reveal transition-all duration-500" style="transition-delay: 400ms;">
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-bold mb-2 text-white">Elite</h3>
+                            <p class="text-zinc-400 text-sm h-10">Maximum earning potential</p>
+                            <div class="mt-6 flex items-baseline text-5xl font-black text-white">
+                                $24.99<span class="text-xl font-medium text-zinc-500 ml-2">/mo</span>
+                            </div>
+                        </div>
+                        <ul class="space-y-5 mb-10 flex-1">
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Unlimited Ads</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">$0.10 base per click</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">24/7 VIP support</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">30% Referral bonus</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-base">
+                                <i data-lucide="check-circle-2" class="w-6 h-6 text-primary shrink-0"></i>
+                                <span class="text-zinc-300">Dedicated manager</span>
+                            </li>
+                        </ul>
+                        <a href="/dashboard/plans" class="w-full h-14 flex items-center justify-center text-lg bg-transparent text-white border border-zinc-700 hover:bg-zinc-800 rounded-xl font-bold transition-all">
+                            Upgrade Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Testimonials -->
+        <section id="reviews" class="py-24 md:py-32 bg-muted/30">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Loved by Thousands</h2>
+                    <p class="text-xl text-muted-foreground">
+                        Don't just take our word for it. Here's what our community has to say about their experience with Smart Earn Online.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-card border rounded-3xl p-8 shadow-sm relative reveal transition-all duration-500">
+                        <div class="flex gap-1 mb-6">
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                        </div>
+                        <p class="text-lg text-muted-foreground mb-8 leading-relaxed">"I've tried dozens of PTC sites, but Smart Earn Online is by far the best. The payouts are instant and the ads are actually relevant. I make about $300 extra a month!"</p>
+                        <div class="flex items-center gap-4 mt-auto">
+                            <img src="https://picsum.photos/seed/sarah/100/100" alt="Sarah Jenkins" class="w-14 h-14 rounded-full object-cover border-2 border-primary/20" referrerPolicy="no-referrer">
+                            <div>
+                                <h4 class="font-bold text-lg">Sarah Jenkins</h4>
+                                <p class="text-sm text-primary font-medium">Pro Earner</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="bg-card border rounded-3xl p-8 shadow-sm relative reveal transition-all duration-500" style="transition-delay: 200ms;">
+                        <div class="flex gap-1 mb-6">
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                        </div>
+                        <p class="text-lg text-muted-foreground mb-8 leading-relaxed">"The traffic quality is phenomenal. We ran a campaign for our new SaaS tool and saw a 15% conversion rate. The anti-bot protection really works."</p>
+                        <div class="flex items-center gap-4 mt-auto">
+                            <img src="https://picsum.photos/seed/michael/100/100" alt="Michael Chen" class="w-14 h-14 rounded-full object-cover border-2 border-primary/20" referrerPolicy="no-referrer">
+                            <div>
+                                <h4 class="font-bold text-lg">Michael Chen</h4>
+                                <p class="text-sm text-primary font-medium">Advertiser</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="bg-card border rounded-3xl p-8 shadow-sm relative reveal transition-all duration-500" style="transition-delay: 400ms;">
+                        <div class="flex gap-1 mb-6">
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-amber-400 text-amber-400"></i>
+                        </div>
+                        <p class="text-lg text-muted-foreground mb-8 leading-relaxed">"Upgrading to Elite was the best decision. The unlimited ads and 30% referral bonus allowed me to build a passive income stream that pays my rent."</p>
+                        <div class="flex items-center gap-4 mt-auto">
+                            <img src="https://picsum.photos/seed/elena/100/100" alt="Elena Rodriguez" class="w-14 h-14 rounded-full object-cover border-2 border-primary/20" referrerPolicy="no-referrer">
+                            <div>
+                                <h4 class="font-bold text-lg">Elena Rodriguez</h4>
+                                <p class="text-sm text-primary font-medium">Elite Earner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. FAQ -->
+        <section id="faq" class="py-24 md:py-32">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Frequently Asked Questions</h2>
+                    <p class="text-xl text-muted-foreground">Everything you need to know about the platform and billing.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- FAQ 1 -->
+                    <div class="faq-item bg-card border rounded-2xl overflow-hidden reveal transition-all duration-500">
+                        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left text-lg font-semibold hover:bg-muted/50 transition-colors">
+                            <span>Is Smart Earn Online really free to join?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="p-6 pt-0 text-muted-foreground text-base leading-relaxed">
+                                Yes! Creating an account and earning money as a standard user is 100% free. You only pay if you choose to upgrade your account for higher earning rates or if you want to purchase advertising.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 2 -->
+                    <div class="faq-item bg-card border rounded-2xl overflow-hidden reveal transition-all duration-500" style="transition-delay: 100ms;">
+                        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left text-lg font-semibold hover:bg-muted/50 transition-colors">
+                            <span>How do I get paid?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="p-6 pt-0 text-muted-foreground text-base leading-relaxed">
+                                We support multiple withdrawal methods including PayPal, Bank Transfer, Bitcoin, and Ethereum. Withdrawals for Pro and Elite members are processed instantly, while Starter members are processed weekly.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 3 -->
+                    <div class="faq-item bg-card border rounded-2xl overflow-hidden reveal transition-all duration-500" style="transition-delay: 200ms;">
+                        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left text-lg font-semibold hover:bg-muted/50 transition-colors">
+                            <span>What is the minimum withdrawal amount?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="p-6 pt-0 text-muted-foreground text-base leading-relaxed">
+                                The minimum withdrawal threshold is just $10.00. Active users typically reach this within their first few days on the platform.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 4 -->
+                    <div class="faq-item bg-card border rounded-2xl overflow-hidden reveal transition-all duration-500" style="transition-delay: 300ms;">
+                        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left text-lg font-semibold hover:bg-muted/50 transition-colors">
+                            <span>How does the referral program work?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="p-6 pt-0 text-muted-foreground text-base leading-relaxed">
+                                You earn a percentage of everything your referrals earn, for life! Starter members get 5%, Pro members get 15%, and Elite members get a massive 30% referral bonus.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ 5 -->
+                    <div class="faq-item bg-card border rounded-2xl overflow-hidden reveal transition-all duration-500" style="transition-delay: 400ms;">
+                        <button class="faq-trigger w-full flex items-center justify-between p-6 text-left text-lg font-semibold hover:bg-muted/50 transition-colors">
+                            <span>Are the advertisements safe?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <div class="p-6 pt-0 text-muted-foreground text-base leading-relaxed">
+                                Absolutely. Every advertisement submitted to our platform goes through a rigorous automated and manual review process to ensure it contains no malware, adult content, or illegal material.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Blog Preview -->
+        <section id="blog" class="py-24 md:py-32 bg-muted/30 border-y">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal transition-all duration-500">
+                    <div class="max-w-2xl">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Latest Insights</h2>
+                        <p class="text-xl text-muted-foreground">Tips, updates, and strategies to maximize your success on Smart Earn Online.</p>
+                    </div>
+                    <button class="hidden md:flex items-center px-6 py-3 border border-border bg-background rounded-xl font-semibold hover:bg-muted transition-colors">View All Articles</button>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Blog 1 -->
+                    <div class="bg-card border rounded-3xl overflow-hidden shadow-sm group cursor-pointer hover:shadow-md transition-all reveal transition-all duration-500">
+                        <div class="aspect-[3/2] overflow-hidden">
+                            <img src="https://picsum.photos/seed/blog1/600/400" alt="Blog 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer">
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center gap-4 text-sm text-muted-foreground mb-4 font-medium">
+                                <span class="text-primary">Tips & Tricks</span>
+                                <span>•</span>
+                                <span>Mar 20, 2026</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">Top 10 Ways to Maximize Your PTC Earnings in 2026</h3>
+                            <div class="flex items-center text-primary font-semibold">
+                                Read Article <i data-lucide="chevron-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Blog 2 -->
+                    <div class="bg-card border rounded-3xl overflow-hidden shadow-sm group cursor-pointer hover:shadow-md transition-all reveal transition-all duration-500" style="transition-delay: 200ms;">
+                        <div class="aspect-[3/2] overflow-hidden">
+                            <img src="https://picsum.photos/seed/blog2/600/400" alt="Blog 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer">
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center gap-4 text-sm text-muted-foreground mb-4 font-medium">
+                                <span class="text-primary">Advertisers</span>
+                                <span>•</span>
+                                <span>Mar 18, 2026</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">Why PTC Advertising is Still Highly Relevant for Brands</h3>
+                            <div class="flex items-center text-primary font-semibold">
+                                Read Article <i data-lucide="chevron-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Blog 3 -->
+                    <div class="bg-card border rounded-3xl overflow-hidden shadow-sm group cursor-pointer hover:shadow-md transition-all reveal transition-all duration-500" style="transition-delay: 400ms;">
+                        <div class="aspect-[3/2] overflow-hidden">
+                            <img src="https://picsum.photos/seed/blog3/600/400" alt="Blog 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer">
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center gap-4 text-sm text-muted-foreground mb-4 font-medium">
+                                <span class="text-primary">News</span>
+                                <span>•</span>
+                                <span>Mar 15, 2026</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">Platform Update: New Instant Crypto Withdrawal Methods</h3>
+                            <div class="flex items-center text-primary font-semibold">
+                                Read Article <i data-lucide="chevron-right" class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full mt-8 md:hidden px-6 py-3 border border-border bg-background rounded-xl font-semibold hover:bg-muted transition-colors reveal">View All Articles</button>
+            </div>
+        </section>
+
+        <!-- 10. Contact -->
+        <section id="contact" class="py-24 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <div class="reveal transition-all duration-500">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Get in Touch</h2>
+                        <p class="text-xl text-muted-foreground mb-12">
+                            Have questions about our platform? Our dedicated support team is here to help you 24/7.
+                        </p>
+                        
+                        <div class="space-y-8">
+                            <div class="flex items-start gap-6">
+                                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="message-square" class="w-7 h-7 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">Chat with us</h4>
+                                    <p class="text-muted-foreground mb-2">Our friendly team is here to help.</p>
+                                    <a href="#" class="text-fuchsia-600 font-semibold hover:underline">support@smartearnonline.com</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-6">
+                                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="map-pin" class="w-7 h-7 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">Visit us</h4>
+                                    <p class="text-muted-foreground mb-2">Come say hello at our office HQ.</p>
+                                    <p class="font-medium">100 Innovation Drive<br>San Francisco, CA 94103</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-6">
+                                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="phone" class="w-7 h-7 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">Call us</h4>
+                                    <p class="text-muted-foreground mb-2">Mon-Fri from 8am to 5pm.</p>
+                                    <p class="font-medium">+1 (555) 000-0000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-card border rounded-3xl p-8 md:p-10 shadow-xl reveal transition-all duration-500" style="transition-delay: 200ms;">
+                        <h3 class="text-2xl font-bold mb-8">Send us a message</h3>
+                        <form class="space-y-6" onsubmit="event.preventDefault()">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold">First Name</label>
+                                    <input type="text" class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" placeholder="John">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold">Last Name</label>
+                                    <input type="text" class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Doe">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold">Email</label>
+                                <input type="email" class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary" placeholder="john@example.com">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold">Message</label>
+                                <textarea rows="4" class="w-full px-4 py-3 bg-background border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary resize-none" placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button class="w-full h-14 bg-primary text-primary-foreground rounded-xl text-lg font-bold shadow-lg hover:shadow-xl transition-all">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 text-zinc-400 py-16 md:py-24 border-t border-zinc-800 relative overflow-hidden">
+        <!-- Colorful Vector Background Elements -->
+        <div class="absolute bottom-[-50%] right-[-10%] w-[60%] h-[100%] rounded-full bg-orange-600/10 blur-[150px] -z-10"></div>
+        <div class="absolute top-[-20%] left-[-10%] w-[40%] h-[60%] rounded-full bg-violet-600/10 blur-[120px] -z-10"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16 reveal transition-all duration-500">
+                <div class="col-span-2 lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-fuchsia-500/30">
+                            <i data-lucide="zap" class="text-white w-6 h-6"></i>
+                        </div>
+                        <span class="font-extrabold text-2xl tracking-tight text-white">Smart Earn Online</span>
+                    </div>
+                    <p class="text-zinc-400 max-w-sm mb-8 leading-relaxed">
+                        The most transparent and rewarding pay-to-click platform on the internet. Earn money on your own terms or drive high-quality traffic to your business.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-primary hover:text-white cursor-pointer transition-colors">
+                            <i data-lucide="globe" class="w-5 h-5"></i>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-primary hover:text-white cursor-pointer transition-colors">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-primary hover:text-white cursor-pointer transition-colors">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-white mb-6 text-lg">Platform</h4>
+                    <ul class="space-y-4">
+                        <li><button onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">How it works</button></li>
+                        <li><button onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">Pricing</button></li>
+                        <li><button onclick="document.getElementById('services').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">Advertisers</button></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Affiliate Program</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-white mb-6 text-lg">Company</h4>
+                    <ul class="space-y-4">
+                        <li><button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">About Us</button></li>
+                        <li><button onclick="document.getElementById('blog').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">Blog</button></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors">Contact</button></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-white mb-6 text-lg">Legal</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-zinc-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 reveal transition-all duration-500">
+                <p>&copy; 2026 Smart Earn Online Inc. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-sm">
+                    <span>Made with</span>
+                    <i data-lucide="star" class="w-4 h-4 text-fuchsia-500 fill-fuchsia-500"></i>
+                    <span>in San Francisco</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    </main>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Hero Reveal Animation
+        window.addEventListener('load', () => {
+            const hero = document.getElementById('hero-content');
+            hero.classList.remove('opacity-0', 'translate-y-4');
+        });
+
+        // FAQ Accordion Logic
+        document.querySelectorAll('.faq-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const item = trigger.closest('.faq-item');
+                const content = item.querySelector('.faq-content');
+                const icon = trigger.querySelector('[data-lucide="chevron-down"]');
+                const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+                // Close all other items
+                document.querySelectorAll('.faq-content').forEach(c => {
+                    c.style.maxHeight = '0px';
+                    c.closest('.faq-item').querySelector('[data-lucide="chevron-down"]').style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    content.style.maxHeight = '0px';
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenu.classList.remove('opacity-0');
+                mobileMenu.classList.add('flex');
+            }, 10);
+        });
+
+        const closeMenu = () => {
+            mobileMenu.classList.add('opacity-0');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            }, 300);
+        };
+
+        closeMenuBtn.addEventListener('click', closeMenu);
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Intersection Observer for Reveal Animations
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Sticky Nav logic
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-xl');
+            } else {
+                nav.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body>
+</html>
