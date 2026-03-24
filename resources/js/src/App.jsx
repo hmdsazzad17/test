@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Ads from './pages/Ads';
+import Wallet from './pages/Wallet';
 import useAuthStore from './store/authStore';
 
 const ProtectedRoute = ({ children }) => {
@@ -41,6 +42,14 @@ export default function App() {
                             element={
                                 <ProtectedRoute>
                                     <Ads />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/wallet"
+                            element={
+                                <ProtectedRoute>
+                                    <Wallet />
                                 </ProtectedRoute>
                             }
                         />

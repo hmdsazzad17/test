@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\AdController;
+use App\Http\Controllers\API\WithdrawalController;
+use App\Http\Controllers\API\DepositController;
 
 Route::prefix('v1/auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -34,3 +36,14 @@ Route::prefix('v1/ads')->group(function () {
         Route::post('/{id}/complete', [AdController::class, 'complete']);
     });
 });
+
+Route::middleware('auth:sanctum')->prefix('v1/withdrawals')->group(function () {
+    Route::get('/', [WithdrawalController::class, 'index']);
+    Route::post('/', [WithdrawalController::class, 'store']);
+});
+
+Route::middleware('auth:sanctum')->prefix('v1/deposits')->group(function () {
+    Route::get('/', [DepositController::class, 'index']);
+    Route::post('/', [DepositController::class, 'store']);
+});
+Route::post('v1/deposits/webhook', [DepositController::class, 'webhook']);

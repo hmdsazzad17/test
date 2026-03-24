@@ -47,19 +47,14 @@ export default function Dashboard() {
                 </div>
 
                 <div className="bg-green-50 p-6 rounded-lg shadow-sm border border-green-100">
-                    <h3 className="text-lg font-medium text-green-800 mb-2">Wallet</h3>
-                    <p className="text-gray-600 mb-4">Check your balance and transactions.</p>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded opacity-50 cursor-not-allowed">
-                        Coming Soon
-                    </button>
-                </div>
-
-                <div className="bg-purple-50 p-6 rounded-lg shadow-sm border border-purple-100">
-                    <h3 className="text-lg font-medium text-purple-800 mb-2">Referrals</h3>
-                    <p className="text-gray-600 mb-4">Invite friends and earn commission.</p>
-                    <button className="bg-purple-600 text-white px-4 py-2 rounded opacity-50 cursor-not-allowed">
-                        Coming Soon
-                    </button>
+                    <h3 className="text-lg font-medium text-green-800 mb-2">Wallet & Referrals</h3>
+                    <p className="text-gray-600 mb-4">Manage your earnings, withdrawals, and refer friends.</p>
+                    <Link
+                        to="/wallet"
+                        className="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                    >
+                        Go to Wallet
+                    </Link>
                 </div>
             </div>
         </div>

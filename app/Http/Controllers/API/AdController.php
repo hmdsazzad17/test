@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
 use App\Models\AdView;
+use App\Models\Referral;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -259,7 +260,20 @@ class AdController extends Controller
                     "adview_{$adView->id}_reward" // Deterministic key based on session
                 );
 
-                // Referral commission logic could go here or in a listener
+                // Referral commission logic
+                $referral = Referral::where('referred_user_id', $user->id)->first();
+                if ($referral) {
+                    $commissionAmount = $ad->reward_amount * $referral->commission_rate;
+                    if ($commissionAmount > 0) {
+                        $walletService->credit(
+                            $referral->referrer, // $referral->referrer automatically resolves to User due to belongsTo
+                            $commissionAmount,
+                            'referral',
+                            $adView,
+                            "adview_{$adView->id}_referral_commission"
+                        );
+                    }
+                }
             });
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to complete ad.', 'error' => $e->getMessage()], 500);

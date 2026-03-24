@@ -38,6 +38,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->referral_code = \Illuminate\Support\Str::random(10);
+        });
+    }
+
     /**
      * Get the attributes that should be cast.
      *
