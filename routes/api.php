@@ -47,3 +47,15 @@ Route::middleware('auth:sanctum')->prefix('v1/deposits')->group(function () {
     Route::post('/', [DepositController::class, 'store']);
 });
 Route::post('v1/deposits/webhook', [DepositController::class, 'webhook']);
+
+// Admin Routes
+Route::middleware(['auth:sanctum', 'admin'])->prefix('v1/admin')->group(function () {
+    Route::get('/users', [\App\Http\Controllers\API\Admin\UserController::class, 'index']);
+    Route::post('/users/{id}/ban', [\App\Http\Controllers\API\Admin\UserController::class, 'ban']);
+
+    Route::get('/ads', [\App\Http\Controllers\API\Admin\AdController::class, 'index']);
+    Route::put('/ads/{id}/status', [\App\Http\Controllers\API\Admin\AdController::class, 'updateStatus']);
+
+    Route::get('/withdrawals', [\App\Http\Controllers\API\Admin\WithdrawalController::class, 'index']);
+    Route::put('/withdrawals/{id}/process', [\App\Http\Controllers\API\Admin\WithdrawalController::class, 'process']);
+});
