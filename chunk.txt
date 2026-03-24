@@ -1,0 +1,101 @@
+
+### Service Contract
+- WalletService::credit(user, amount, source, ref)
+- WalletService::debit(user, amount, source, ref)
+
+---
+
+## 5.3 Ads & Campaigns
+
+### Tables
+**ads**
+- id
+- advertiser_id (index)
+- title
+- url
+- reward_amount (decimal 10,4)
+- duration_seconds (int)
+- total_clicks (int)
+- remaining_clicks (int, index)
+- status (pending|active|paused|completed|rejected)
+- country_targets (json)
+- device_targets (json)
+- created_at
+
+**campaigns (optional)**
+- id, user_id, budget, spent, status
+
+### APIs
+```
+GET  /api/v1/ads
+POST /api/v1/ads
+PUT  /api/v1/ads/{id}
+POST /api/v1/ads/{id}/pause
+```
+
+---
+
+## 5.4 Ad View Session (Core Engine)
+
+### Tables
+**ad_views**
+- id
+- user_id (index)
+- ad_id (index)
+- started_at (index)
+- completed_at
+- ip_address
+- user_agent
+- visibility_violations (int)
+- status (in_progress|completed|failed|expired)
+- reward_given (boolean)
+- created_at
+
+### Flow
+1. Start Session
+```
+POST /api/v1/ads/{id}/start
+```
+- Validate eligibility (not completed before, geo/device match, remaining_clicks>0)
+- Create ad_view (status=in_progress)
+- Return session token + duration
+
+2. Client Timer & Validation
+- Countdown timer
+- Visibility API: block on tab hidden
+- Heartbeat ping every 5s (optional)
+
+3. Complete Session
+```
+POST /api/v1/ads/{id}/complete
+```
+
+### Server Validations
+- elapsed >= duration_seconds
+- no duplicate completion
+- low visibility violations
+- captcha_passed=true
+- rate limits OK
+
+### Atomic Operation (DB Transaction)
+- Update ad_view.status=completed
+- Decrement ads.remaining_clicks (WHERE remaining_clicks>0)
+- Insert user credit transaction
+- If referral exists → insert referral commission
+
+---
+
+## 5.5 Anti-Cheat System
+
+### Rules
+- Max accounts/IP (configurable)
+- VPN/Proxy detection (3rd party API)
+- Device fingerprint (hash UA + IP + screen hints)
+- Tab visibility enforcement
+- Randomized captcha on completion
+- Cooldown between ads
+
+### Signals Stored
+- ip_address
+- user_agent
+- fingerprint_hash
