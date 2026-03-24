@@ -1,0 +1,22 @@
+/* Custom styles to handle Bootstrap/Tailwind conflicts or specific overrides */
+
+body {
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+/* Ensure Bootstrap buttons don't override Tailwind colors completely if we mix them */
+.btn-brand-yellow {
+    background-color: #FFD700;
+    color: #000;
+    font-weight: 700;
+    border: none;
+}
+.btn-brand-yellow:hover {
+    background-color: #e6c200;
+    color: #000;
+}
+
+/* Preloader styles (backup if Tailwind fails) */
+.preloader {
+    background-color: #ffffff;
+}
